@@ -1,7 +1,10 @@
 import EmailVerificationModel from "../models/emailVerification.js";
 import UserModel from "../models/User.js";
 import bcrypt from "bcrypt";
-import sendverificationotp from "../utils/sendverificationotp.js"
+import generateTokens from "../utils/genrateToken.js";
+import setTokensCookies from "../utils/setTokenCookies.js";
+import sendverificationotp from "../utils/sendverificationotp.js";
+import refreshAccessToken from "../utils/refreshtokenaccess.js";
 
 class UserController {
   //make a class to do a User registration
@@ -90,21 +93,17 @@ class UserController {
       });
       if (!emailVerification) {
         if (!existingUser.is_verified) {
-          
           await sendverificationotp(req, existingUser);
-          return res
-            .status(400)
-            .json({
-              status: "failed",
-              message: "Invalid OTP, new OTP sent to your email",
-            });
+          return res.status(400).json({
+            status: "failed",
+            message: "Invalid OTP, new OTP sent to your email",
+          });
         }
         return res
           .status(400)
           .json({ status: "failed", message: "Invalid OTP" });
       }
 
-     
       const currentTime = new Date();
       // 15 * 60 * 1000 calculates the expiration period in milliseconds(15 minutes).
       const expirationTime = new Date(
@@ -113,15 +112,12 @@ class UserController {
       if (currentTime > expirationTime) {
         // OTP expired, send new OTP
         await sendverificationotp(req, existingUser);
-        return res
-          .status(400)
-          .json({
-            status: "failed",
-            message: "OTP expired, new OTP sent to your email",
-          });
+        return res.status(400).json({
+          status: "failed",
+          message: "OTP expired, new OTP sent to your email",
+        });
       }
 
-     
       existingUser.is_verified = true;
       await existingUser.save();
 
@@ -132,28 +128,24 @@ class UserController {
         .json({ status: "success", message: "Email verified successfully" });
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .json({
-          status: "failed",
-          message: "Unable to verify email, please try again later",
-        });
+      res.status(500).json({
+        status: "failed",
+        message: "Unable to verify email, please try again later",
+      });
     }
   };
 
-  // user login 
+  // user login
 
   static userLogin = async (req, res) => {
     try {
       const { email, password } = req.body;
-      
+
       if (!email || !password) {
-        return res
-          .status(400)
-          .json({
-            status: "failed",
-            message: "Email and password are required",
-          });
+        return res.status(400).json({
+          status: "failed",
+          message: "Email and password are required",
+        });
       }
       // Find user by email
       const user = await UserModel.findOne({ email });
@@ -210,27 +202,56 @@ class UserController {
       });
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .json({
-          status: "failed",
-          message: "Unable to login, please try again later",
-        });
+      res.status(500).json({
+        status: "failed",
+        message: "Unable to login, please try again later",
+      });
     }
   };
 
   // get new access token and refresh token
 
   static getNewAccessToken = async (req, res) => {
-    
-  }
-  
+    try {
+      // Get new access token using Refresh Token
+      const {
+        newAccessToken,
+        newRefreshToken,
+        newAccessTokenExp,
+        newRefreshTokenExp,
+      } = await refreshAccessToken(req, res);
 
+      // Set New Tokens to Cookie
+      setTokensCookies(
+        res,
+        newAccessToken,
+        newRefreshToken,
+        newAccessTokenExp,
+        newRefreshTokenExp
+      );
 
+      res.status(200).send({
+        status: "success",
+        message: "New tokens generated",
+        access_token: newAccessToken,
+        refresh_token: newRefreshToken,
+        access_token_exp: newAccessTokenExp,
+      });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({
+          status: "failed",
+          message: "Unable to generate new token, please try again later",
+        });
+    }
+  };
+
+  // logged in user
+ static logggedInUser = async (req, res) => {
+    res.send({ user: req.user });
+  };
 }
-
-
-
-
 
 export default UserController;
