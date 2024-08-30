@@ -39,7 +39,7 @@ export const authApi = createApi({
           headers: {
             "Content-type": "application/json",
           },
-          credentials: "include", // It is required to set cookie
+          credentials: "include", 
         };
       },
     }),
