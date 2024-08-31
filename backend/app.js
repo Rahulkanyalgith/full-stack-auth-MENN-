@@ -13,12 +13,14 @@ const app = express();
 const port = process.env.PORT;
 const DATBASE_URL = process.env.DATBASE_URL
 // cors policy error solved
-// const corsOption = {
-//   origin: process.env.FRONTEND_HOST,
-//   Credential: 'true',
-//   optionSuccessStatus: 200,
-// };
-app.use(cors())
+const corsOptions = {
+  
+  origin: process.env.FRONTEND_HOST,
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions))
+
 
 connectDB(DATBASE_URL);
 

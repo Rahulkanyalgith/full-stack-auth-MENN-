@@ -1,10 +1,10 @@
 "use client"
 import Link from "next/link";
 import { useFormik } from 'formik';
-import { verifyEmailSchema } from '../../../validation/schema';
+import { verifyEmailSchema } from '@/validation/schemas';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useVerifyEmailMutation } from "../../../lib/services/auth.js";
+import { useVerifyEmailMutation } from "@/lib/services/auth";
 
 const initialValues = {
   email: "",

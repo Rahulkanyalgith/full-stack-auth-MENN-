@@ -1,8 +1,8 @@
 "use client"
 import Link from "next/link";
 import { useFormik } from 'formik';
-import { resetPasswordLinkSchema } from "../../../validation/schema";
-import { useResetPasswordLinkMutation } from "../../../lib/services/auth.js";
+import { resetPasswordLinkSchema } from "@/validation/schemas";
+import { useResetPasswordLinkMutation } from "@/lib/services/auth";
 import { useState } from "react";
 const initialValues = {
   email: "",
@@ -31,7 +31,7 @@ const ResetPasswordLink = () => {
           setLoading(false);
         }
       } catch (error) {
-        // console.log(error);
+        
         setLoading(false);
       }
     }

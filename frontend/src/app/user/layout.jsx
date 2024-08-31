@@ -1,4 +1,4 @@
-import UserSidebar from "../../components/UserSidebar"
+import UserSidebar from "@/components/UserSidebar"
 const UserLayout = ({ children }) => {
   return (
     <div className="grid grid-cols-12">

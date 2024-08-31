@@ -1,8 +1,8 @@
 "use client"
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import LoadingIndicator from './LoadingIndicator';
 import Cookies from 'js-cookie';
-import Loader from './Loader';
 const Navbar = () => {
   const [isAuth, setIsAuth] = useState(null);
   useEffect(() => {
@@ -11,8 +11,8 @@ const Navbar = () => {
   })
   return (
     <>
-      {isAuth === null && <Loader />}
-      <nav className="dark:bg-purple-900 p-4">
+      {isAuth === null && <LoadingIndicator />}
+      <nav className="bg-purple-600 p-4">
         <div className="flex items-center justify-between">
           <div>
             <Link href="/" className="text-white mr-4">Home</Link>

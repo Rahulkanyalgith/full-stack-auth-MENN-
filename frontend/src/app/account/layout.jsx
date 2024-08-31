@@ -1,12 +1,11 @@
-import React from 'react'
-import Navbar from '../../components/Navbar'
-const Accountlayout = ({children}) => {
+import Navbar from '@/components/Navbar'
+const AccountLayout = ({ children }) => {
   return (
     <>
-        <Navbar />
-        {children}
+      <Navbar />
+      {children}
     </>
   )
 }
 
-export default Accountlayout
+export default AccountLayout

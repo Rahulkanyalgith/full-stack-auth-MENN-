@@ -1,11 +1,9 @@
-
-
 "use client"
 import Link from "next/link";
 import { useState } from "react";
 import { useFormik } from 'formik';
-import { registerSchema } from "../../../validation/schema";
-import { useCreateUserMutation } from "../../../lib/services/auth.js";
+import { registerSchema } from '@/validation/schemas'
+import { useCreateUserMutation } from "@/lib/services/auth";
 import { useRouter } from 'next/navigation'
 
 const initialValues = {
@@ -27,9 +25,9 @@ const Register = () => {
     onSubmit: async (values, action) => {
       setLoading(true);
       try {
-        
-        const response = await createUser(values)
        
+        const response = await createUser(values)
+        
         if (response.data && response.data.status === "success") {
           setServerSuccessMessage(response.data.message)
           setServerErrorMessage('')

@@ -1,6 +1,6 @@
 "use client"
 import { useFormik } from 'formik';
-import { changePasswordSchema } from '../../../validation/schema';
+import { changePasswordSchema } from '@/validation/schemas';
 import { useChangePasswordMutation } from '@/lib/services/auth';
 import { useState } from 'react';
 
